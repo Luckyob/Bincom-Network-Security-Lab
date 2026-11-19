@@ -1,0 +1,9 @@
+# Nmap 7.99 scan initiated Mon Nov 16 19:15:38 2026 as: /usr/lib/nmap/nmap -sS -Pn -p 1-1000 -oN /home/kali/bincom-network-security/stage2/post_hardening_scan.txt 74.152.48.61
+Nmap scan report for 74.152.48.61
+Host is up (0.25s latency).
+Not shown: 998 filtered tcp ports (no-response)
+PORT    STATE SERVICE
+22/tcp  open  ssh
+587/tcp open  submission
+
+# Nmap done at Mon Nov 16 19:15:59 2026 -- 1 IP address (1 host up) scanned in 21.32 seconds

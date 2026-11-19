@@ -1,0 +1,94 @@
+
+ sudo ss -tulnp
+Netid State  Recv-Q Send-Q     Local Address:Port    Peer Address:Port Process                                                                                         
+udp   UNCONN 0      0              127.0.0.1:323          0.0.0.0:*     users:(("chronyd",pid=1023,fd=6))                                                              
+udp   UNCONN 0      0             127.0.0.54:53           0.0.0.0:*     users:(("systemd-resolve",pid=821346,fd=16))                                                   
+udp   UNCONN 0      0          127.0.0.53%lo:53           0.0.0.0:*     users:(("systemd-resolve",pid=821346,fd=14))                                                   
+udp   UNCONN 0      0        172.16.0.4%eth0:68           0.0.0.0:*     users:(("systemd-network",pid=821415,fd=22))                                                   
+udp   UNCONN 0      0                  [::1]:323             [::]:*     users:(("chronyd",pid=1023,fd=7))                                                              
+tcp   LISTEN 0      10             127.0.0.1:28330        0.0.0.0:*     users:(("mdsd",pid=1585802,fd=1378))                                                           
+tcp   LISTEN 0      4096           127.0.0.1:13005        0.0.0.0:*     users:(("amacoreagent",pid=139930,fd=11))                                                      
+tcp   LISTEN 0      10             127.0.0.1:28230        0.0.0.0:*     users:(("mdsd",pid=1585802,fd=1372))                                                           
+tcp   LISTEN 0      4096       127.0.0.53%lo:53           0.0.0.0:*     users:(("systemd-resolve",pid=821346,fd=15))                                                   
+tcp   LISTEN 0      4096           127.0.0.1:8080         0.0.0.0:*     users:(("docker-proxy",pid=246080,fd=7))                                                       
+tcp   LISTEN 0      4096          127.0.0.54:53           0.0.0.0:*     users:(("systemd-resolve",pid=821346,fd=17))                                                   
+tcp   LISTEN 0      10             127.0.0.1:28130        0.0.0.0:*     users:(("mdsd",pid=1585802,fd=1370))                                                           
+tcp   LISTEN 0      4096             0.0.0.0:22           0.0.0.0:*     users:(("sshd",pid=1588044,fd=3),("sshd",pid=1537,fd=3),("systemd",pid=1,fd=209))              
+tcp   LISTEN 0      4096           127.0.0.1:12563        0.0.0.0:*     users:(("amacoreagent",pid=139930,fd=10))                                                      
+tcp   LISTEN 0      4096           127.0.0.1:34173        0.0.0.0:*     users:(("containerd",pid=245267,fd=14))                                                        
+tcp   LISTEN 0      511                    *:80                 *:*     users:(("apache2",pid=1542133,fd=4),("apache2",pid=1542132,fd=4),("apache2",pid=1429686,fd=4)) 
+tcp   LISTEN 0      4096                [::]:22              [::]:*     users:(("sshd",pid=1588044,fd=4),("sshd",pid=1537,fd=4),("systemd",pid=1,fd=210))              
+
+
+$ sudo systemctl --type=service --state=running
+  UNIT                               LOAD   ACTIVE SUB     DESCRIPTION                                               
+  apache-htcacheclean.service        loaded active running Disk Cache Cleaning Daemon for Apache HTTP Server
+  apache2.service                    loaded active running The Apache HTTP Server
+  azuremonitor-agentlauncher.service loaded active running Azure Monitor Agent Launcher daemon (on systemd)
+  azuremonitor-astextension.service  loaded active running Azure Monitor Agent AST extension daemon (on systemd)
+  azuremonitor-coreagent.service     loaded active running Azure Monitor Agent CoreAgent daemon (on systemd)
+  azuremonitoragent.service          loaded active running Azure Monitor Agent daemon (on systemd)
+  chrony.service                     loaded active running chrony, an NTP client/server
+  containerd.service                 loaded active running containerd container runtime
+  cron.service                       loaded active running Regular background program processing daemon
+  dbus.service                       loaded active running D-Bus System Message Bus
+  docker.service                     loaded active running Docker Application Container Engine
+  getty@tty1.service                 loaded active running Getty on tty1
+  hv-kvp-daemon.service              loaded active running Hyper-V KVP Protocol Daemon
+  metrics-extension.service          loaded active running Metrics Extension service for Linux Agent metrics sourcing
+  ModemManager.service               loaded active running Modem Manager
+  multipathd.service                 loaded active running Device-Mapper Multipath Device Controller
+  networkd-dispatcher.service        loaded active running Dispatcher daemon for systemd-networkd
+  polkit.service                     loaded active running Authorization Manager
+  rsyslog.service                    loaded active running System Logging Service
+  serial-getty@ttyS0.service         loaded active running Serial Getty on ttyS0
+  ssh.service                        loaded active running OpenBSD Secure Shell server
+  systemd-journald.service           loaded active running Journal Service
+  systemd-logind.service             loaded active running User Login Management
+  systemd-networkd.service           loaded active running Network Configuration
+  systemd-resolved.service           loaded active running Network Name Resolution
+  systemd-udevd.service              loaded active running Rule-based Manager for Device Events and Files
+  udisks2.service                    loaded active running Disk Manager
+  unattended-upgrades.service        loaded active running Unattended Upgrades Shutdown
+  user@1004.service                  loaded active running User Manager for UID 1004
+  walinuxagent.service               loaded active running Azure Linux Agent
+
+
+
+sudo iptables -L -n -v
+Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain FORWARD (policy DROP 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 DOCKER-USER  0    --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 DOCKER-FORWARD  0    --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain DOCKER (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 ACCEPT     6    --  !docker0 docker0  0.0.0.0/0            172.17.0.2           tcp dpt:80
+    0     0 DROP       0    --  !docker0 docker0  0.0.0.0/0            0.0.0.0/0           
+
+Chain DOCKER-BRIDGE (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 DOCKER     0    --  *      docker0  0.0.0.0/0            0.0.0.0/0           
+
+Chain DOCKER-CT (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 ACCEPT     0    --  *      docker0  0.0.0.0/0            0.0.0.0/0            ctstate RELATED,ESTABLISHED
+
+Chain DOCKER-FORWARD (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 DOCKER-CT  0    --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 DOCKER-INTERNAL  0    --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 DOCKER-BRIDGE  0    --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     0    --  docker0 *       0.0.0.0/0            0.0.0.0/0           
+
+Chain DOCKER-INTERNAL (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain DOCKER-USER (1 references)
+ pkts bytes target     prot opt in     out     source               destination   
